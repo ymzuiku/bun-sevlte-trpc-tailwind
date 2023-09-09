@@ -1,0 +1,51 @@
+name: main_deploy
+
+on:
+  push:
+    branches: [main]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  main-client:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Node.js
+        uses: actions/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+      - name: ESLint cache
+        uses: actions/cache@v3
+        with:
+          path: .eslintcache
+          key: |
+            ${{ runner.os }}-eslint-${{ hashFiles('.eslintrc.cjs') }}
+          restore-keys: |
+            ${{ runner.os }}-eslint-
+      - name: Check typescript and lint
+        run: bun check
+      - name: Env
+        run: |
+          chmod 777 ./
+          touch deploy_key
+          echo "${{secrets.GG_SSH_PRIVATE_KEY}}" > deploy_key
+          chmod 600 ./deploy_key
+          touch ./packages/client/.env.sentry-build-plugin
+          echo "${{secrets.GG_SENTRY_AUTH_KEY}}" > ./packages/client/.env.sentry-build-plugin
+          chmod 600 ./packages/client/.env.sentry-build-plugin
+      - name: Build client
+        run: |
+          export NODE_OPTIONS=--max-old-space-size=4096
+          pnpm build:client
+      - name: Deploy client
+        run: |
+          rsync -av  -e 'ssh -i ./deploy_key -o StrictHostKeyChecking=no' --delete-delay ./build/* ${{ secrets.GG_SSH_URL }}:~/server/aisentence/

@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit';
-import type { inferAsyncReturnType } from '@trpc/server';
+import { initTRPC, type inferAsyncReturnType } from '@trpc/server';
 
 // we're not using the event parameter is this example,
 // hence the eslint-disable rule
@@ -10,4 +10,6 @@ export async function createContext(event: RequestEvent) {
 	};
 }
 
-export type Context = inferAsyncReturnType<typeof createContext>;
+type Context = inferAsyncReturnType<typeof createContext>;
+
+export const t = initTRPC.context<Context>().create();
