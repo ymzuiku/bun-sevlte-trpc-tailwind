@@ -42,9 +42,6 @@ jobs:
           touch deploy_key
           echo "${{secrets.GG_SSH_PRIVATE_KEY}}" > deploy_key
           chmod 600 ./deploy_key
-          touch ./packages/client/.env.sentry-build-plugin
-          echo "${{secrets.GG_SENTRY_AUTH_KEY}}" > ./packages/client/.env.sentry-build-plugin
-          chmod 600 ./packages/client/.env.sentry-build-plugin
       - name: Build
         run: |
           export NODE_OPTIONS=--max-old-space-size=4096
