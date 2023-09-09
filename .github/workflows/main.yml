@@ -14,9 +14,8 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Install Node.js
+        uses: actions/checkout@v3
+      - name: Install bun
         uses: actions/setup-bun@v1
         with:
           bun-version: latest
@@ -32,7 +31,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-eslint-
       - name: Check typescript and lint
-        run: bun check
+        run: |
+          bun check
+          bun lint
       - name: Env
         run: |
           chmod 777 ./
@@ -42,10 +43,12 @@ jobs:
           touch ./packages/client/.env.sentry-build-plugin
           echo "${{secrets.GG_SENTRY_AUTH_KEY}}" > ./packages/client/.env.sentry-build-plugin
           chmod 600 ./packages/client/.env.sentry-build-plugin
-      - name: Build client
+      - name: Build
         run: |
           export NODE_OPTIONS=--max-old-space-size=4096
-          pnpm build:client
+          bun build
+          cd build
+          bun install
       - name: Deploy client
         run: |
           rsync -av  -e 'ssh -i ./deploy_key -o StrictHostKeyChecking=no' --delete-delay ./build/* ${{ secrets.GG_SSH_URL }}:~/server/aisentence/
