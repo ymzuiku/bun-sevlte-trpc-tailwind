@@ -6,6 +6,7 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"e2e": "playwright test",
+		"prisma:init": "prisma generate",
 		"test:all": "bun test && bun run e2e",
 		"migrate:dev": "prisma migrate dev",
 		"migrate:deploy": "prisma migrate deploy",
