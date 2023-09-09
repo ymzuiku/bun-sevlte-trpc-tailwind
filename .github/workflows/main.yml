@@ -16,7 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install bun
-        uses: actions/setup-bun@v1
+        uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
 
@@ -32,8 +32,8 @@ jobs:
             ${{ runner.os }}-eslint-
       - name: Check typescript and lint
         run: |
-          bun check
-          bun lint
+          bun run check
+          bun run lint
       - name: Env
         run: |
           chmod 777 ./
@@ -46,7 +46,7 @@ jobs:
       - name: Build
         run: |
           export NODE_OPTIONS=--max-old-space-size=4096
-          bun build
+          bun run build
           cd build
           bun install
       - name: Deploy client
