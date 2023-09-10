@@ -3,7 +3,8 @@
 	"version": "0.0.1",
 	"scripts": {
 		"dev": "vite dev",
-		"build": "vite build",
+		"build": "vite build && cp -rf prisma build/prisma && bun inject-dirname.ts",
+		"prod": "bun run build && cd build && bun build index.js --target bun --outfile index.js && rm -rf server && rm -rf build/package.json",
 		"preview": "vite preview",
 		"e2e": "playwright test",
 		"prisma:init": "prisma generate",

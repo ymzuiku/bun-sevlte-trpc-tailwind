@@ -24,3 +24,25 @@ bun run build
 You can preview the production build with `bun run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+
+## migrate
+
+If error:
+
+```sh
+bun: command not found
+bunx: command not found
+pm2: command not found
+```
+
+In target server add migrate.sh, and set nvm, bun path:
+
+```sh
+export PATH="$PATH:/home/ubuntu/.nvm/versions/node/v18.15.0/bin"
+export PATH="$PATH:/home/ubuntu/.bun/bin"
+
+bunx prisma generate
+bunx prisma migrate deploy
+pm2 stop your_pm2_server_name
+pm2 start your_pm2_server_name
+```

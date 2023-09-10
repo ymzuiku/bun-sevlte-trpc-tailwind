@@ -36,18 +36,19 @@ jobs:
         run: |
           bun run check
           bun run lint
+      - name: Build
+        run: |
+          export NODE_OPTIONS=--max-old-space-size=4096
+          bun run prod
       - name: Env
         run: |
           chmod 777 ./
           touch deploy_key
           echo "${{secrets.GG_SSH_PRIVATE_KEY}}" > deploy_key
           chmod 600 ./deploy_key
-      - name: Build
-        run: |
-          export NODE_OPTIONS=--max-old-space-size=4096
-          bun run build
-          cd build
-          bun install
       - name: Deploy client
         run: |
           rsync -av  -e 'ssh -i ./deploy_key -o StrictHostKeyChecking=no' --delete-delay ./build/* ${{ secrets.GG_SSH_URL }}:~/server/aisentence/
+      - name: Run DB Migration
+        run: |
+          ssh -i ./deploy_key -o StrictHostKeyChecking=no ${{ secrets.GG_SSH_URL }} "cd ~/server/aisentence/ && ./migrate.sh"

@@ -2,7 +2,7 @@
 	import { trpc } from '$lib/trpc/trpc-client';
 	let error = '';
 	function loadSentences() {
-		return trpc.getSentence.mutate({ userId: Date.now() % 3 });
+		return trpc.getSentence.mutate({ userId: Date.now() % 10 });
 	}
 	let sentences = loadSentences();
 	async function handleInsert() {

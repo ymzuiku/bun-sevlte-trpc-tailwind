@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { db } from '../db';
+import { db } from './db';
 
 export const zodInsertSentenceInput = z.object({
 	text: z.string(),

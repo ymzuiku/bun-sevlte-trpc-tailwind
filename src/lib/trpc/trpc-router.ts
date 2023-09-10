@@ -1,5 +1,5 @@
-import { getSentence, zodGetSentenceInput } from './apis/get-sentence';
-import { insertSentence, zodInsertSentenceInput } from './apis/insert-sentence';
+import { getSentence, zodGetSentenceInput } from '../server/get-sentence';
+import { insertSentence, zodInsertSentenceInput } from '../server/insert-sentence';
 import { t } from './trpc-context';
 
 const input = t.procedure.input;
